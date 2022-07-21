@@ -1,10 +1,7 @@
 using Afkar.Entities;
 using Afkar.Helpers;
-using Afkar.Models.ApplicationUser;
 using Afkar.Models.Loans;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
-
 namespace Afkar.Controllers;
 [ApiController]
 [Route("[controller]")]
