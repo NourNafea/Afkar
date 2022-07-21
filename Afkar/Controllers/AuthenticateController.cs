@@ -29,13 +29,12 @@ namespace Afkar.Controllers;
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestModel model)
+        public async Task<IActionResult> Login(LoginRequestModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 
-
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
@@ -51,17 +50,20 @@ namespace Afkar.Controllers;
                     expiration = token.ValidTo
                 });
             }
-            return Unauthorized();
+
+            return StatusCode(StatusCodes.Status401Unauthorized, new Response {Status = "Error", Message = "These credentials don't match our database"});
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
+        public async Task<IActionResult> Register(RegisterRequestModel model)
         {
             var userExists = await _userManager.FindByEmailAsync(model.Email);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-
+            if (model.ConfirmPassword != model.Password)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Passwords don't match" });
+            
             ApplicationUser user = new()
             {
                 Email = model.Email,

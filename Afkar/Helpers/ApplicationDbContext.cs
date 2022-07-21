@@ -16,4 +16,5 @@ public class ApplicationDbContext : IdentityDbContext <ApplicationUser>
     {
         base.OnModelCreating(builder);
     }
+    public DbSet<LoansRequests> LoansRequests { get; set; } 
 }
